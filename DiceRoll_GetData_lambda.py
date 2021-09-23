@@ -6,7 +6,7 @@ def lambda_handler(event, context):
     
     ##########DynamoDb table clear########
     dynamodb=boto3.resource('dynamodb')
-    table=dynamodb.Table('Dice-Testing')
+    table=dynamodb.Table('Dice_Simulation_Results')
     
     results= table.scan() #retrive datastore dice results 
     

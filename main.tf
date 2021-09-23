@@ -1,20 +1,29 @@
 # Specify the provider and access details
 provider "aws" {
   region = "${var.aws_region}"
+  #access_key = "my-access-key" # your access key
+  #secret_key = "my-secret-key" # your secret key
 }
 
 provider "archive" {}
 
-
-#DiceRoll_GetData_lambda
-
-
-#DiceRoll_Simulation_lambda
 data "archive_file" "zip" {
   type        = "zip"
   source_file = "DiceRoll_Simulation_lambda.py"
   output_path = "DiceRoll_Simulation_lambda.zip"
 }
+
+resource "aws_lambda_function" "lambda" {
+  function_name = "DiceRoll_Simulation_lambda"
+
+  filename         = "${data.archive_file.zip.output_path}"
+  source_code_hash = "${data.archive_file.zip.output_base64sha256}"
+
+  role    = "${aws_iam_role.iam_dice_post_lambda_role.arn}"
+  handler = "DiceRoll_Simulation_lambda.lambda_handler"
+  runtime = "python3.8"
+}
+
 data "archive_file" "zip1" {
   type        = "zip"
   source_file = "DiceRoll_GetData_lambda.py"
@@ -31,13 +40,3 @@ resource "aws_lambda_function" "lambda2" {
   runtime = "python3.8"
 }
 
-resource "aws_lambda_function" "lambda" {
-  function_name = "DiceRoll_Simulation_lambda"
-
-  filename         = "${data.archive_file.zip.output_path}"
-  source_code_hash = "${data.archive_file.zip.output_base64sha256}"
-
-  role    = "${aws_iam_role.iam_dice_post_lambda_role.arn}"
-  handler = "DiceRoll_Simulation_lambda.lambda_handler"
-  runtime = "python3.8"
-}

@@ -7,16 +7,16 @@ def lambda_handler(event, context):
     
     ##########DynamoDb table invoke########
     dynamodb=boto3.resource('dynamodb')
-    table=dynamodb.Table('Dice-Testing')
+    table=dynamodb.Table('Dice_Simulation_Results')
     
     
     #1 Reading Query String Parameters 
     #print('Start......event data print ')
     #print(event)
     #print('Start......event data print ')
-    dicesides=event['queryStringParameters']['s1']
-    no_of_dice=event['queryStringParameters']['n1']
-    no_of_simulations=event['queryStringParameters']['sm1']
+    dicesides=event['queryStringParameters']['dice_sides']
+    no_of_dice=event['queryStringParameters']['no_of_dices']
+    no_of_simulations=event['queryStringParameters']['no_of_simulations']
     
     dice_simul_seq=datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')    # to maintain unique simulation trigger sequence number
     
